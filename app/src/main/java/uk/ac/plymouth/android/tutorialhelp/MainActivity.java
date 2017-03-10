@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.wifi.WpsInfo;
+import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pManager;
@@ -15,6 +17,10 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+//TODO: Need to either
+//A: Turn on WiFi automatically
+//B: Ask the user to enable WiFi
 
 
 public class MainActivity extends AppCompatActivity {
@@ -28,6 +34,10 @@ public class MainActivity extends AppCompatActivity {
     private List<WifiP2pDevice> peers = new ArrayList<>();
 
     private boolean wifiP2pEnabled = false;
+
+
+    private WifiP2pConfig wifiP2pConfig = new WifiP2pConfig();
+
 
 
     //Updates the list of peers
@@ -60,16 +70,19 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onSuccess() {
             //Called when peer discovery initiation is successful
+            Toast.makeText(getApplicationContext(), "onSuccess", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onFailure(int reason) {
             //TODO: Called when discovery initiation fails
             //TODO: Alert user that something went wrong
+
+            Toast.makeText(getApplicationContext(), "OnFailed", Toast.LENGTH_SHORT).show();
         }
+
+
     };
-
-
 
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -130,6 +143,40 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         unregisterReceiver(mReceiver);
     }
+
+
+    //TODO: Connect to a peer
+    //https://developer.android.com/training/connect-devices-wirelessly/wifi-direct.html#fetch
+
+    public void connect()
+    {
+        if (peers.size() < 1)
+        {
+            Toast.makeText(MainActivity.this, "There are no peers!",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
+        WifiP2pDevice device = peers.get(0);
+        WifiP2pConfig config = new WifiP2pConfig();
+        config.deviceAddress = device.deviceAddress;
+        config.wps.setup = WpsInfo.PBC;
+
+        mManager.connect(mChannel, config, new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+                // WiFiDirectBroadcastReceiver will notify us. Ignore for now.
+            }
+
+            @Override
+            public void onFailure(int reason) {
+                Toast.makeText(MainActivity.this, "Connect failed. Retry.",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
     public boolean isWifiP2pEnabled()
     {
