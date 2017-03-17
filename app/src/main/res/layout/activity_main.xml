@@ -19,11 +19,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Discover Peers"
-        android:layout_alignBottom="@+id/textView"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_marginRight="21dp"
         android:layout_marginEnd="21dp"
         android:id="@+id/btnDiscoverPeers" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Connect"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="21dp"
+        android:layout_marginEnd="21dp"
+        android:id="@+id/btnConnectToPeer"
+        android:layout_below="@+id/btnDiscoverPeers" />
 
 </RelativeLayout>

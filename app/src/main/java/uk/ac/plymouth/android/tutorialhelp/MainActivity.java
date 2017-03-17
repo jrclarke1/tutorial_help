@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         public void onFailure(int reason) {
             //TODO: Called when discovery initiation fails
             //TODO: Alert user that something went wrong
+            //TODO: Wifi should be enabled
 
             Toast.makeText(getApplicationContext(), "OnFailed", Toast.LENGTH_SHORT).show();
         }
@@ -98,6 +99,16 @@ public class MainActivity extends AppCompatActivity {
                 //is initiated
 
                 mManager.discoverPeers(mChannel, actionListener);
+
+            }
+        });
+
+        findViewById(R.id.btnConnectToPeer).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                connect();
 
             }
         });
