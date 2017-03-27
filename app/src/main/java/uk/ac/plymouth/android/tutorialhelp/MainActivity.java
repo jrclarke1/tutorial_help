@@ -1,74 +1,46 @@
 package uk.ac.plymouth.android.tutorialhelp;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.wifi.p2p.WifiP2pDevice;
-import android.net.wifi.p2p.WifiP2pDeviceList;
-import android.net.wifi.p2p.WifiP2pManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.Button;
+import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-
-public class MainActivity extends AppCompatActivity {
-
-    private final IntentFilter intentFilter = new IntentFilter();
-
-    WifiP2pManager mManager;
-    WifiP2pManager.Channel mChannel; //Used to connect to the wi-fi framework
-    BroadcastReceiver mReceiver;
-
-    private List<WifiP2pDevice> peers = new ArrayList<>();
-
-    private boolean wifiP2pEnabled = false;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.nearby.Nearby;
+import com.google.android.gms.nearby.messages.Message;
+import com.google.android.gms.nearby.messages.MessageFilter;
+import com.google.android.gms.nearby.messages.MessageListener;
 
 
-    //Updates the list of peers
-    //Called by BroadcastReceiver
-    private WifiP2pManager.PeerListListener peerListListener = new WifiP2pManager.PeerListListener()
-    {
-        @Override
-        public void onPeersAvailable(WifiP2pDeviceList peerList)
-        {
-            Collection<WifiP2pDevice> refreshedPeers = peerList.getDeviceList();
+public class MainActivity extends FragmentActivity
+        implements
+        ConnectionCallbacks,
+        OnConnectionFailedListener
+{
+    private static final String TAG = "MainActivity";
 
-            if (! refreshedPeers.equals(peers))
-            {
-                peers.clear();
-                peers.addAll(refreshedPeers);
+    //private final IntentFilter intentFilter = new IntentFilter();
+    private GoogleApiClient mGoogleApiClient = null;
 
-                //TODO: Notify an AdapterView of the change
-                // ((WiFiPeerListAdapter) getListAdapter()).notifyDataSetChanged();
+    //TODO: Change this to a list
+    //TODO: Method to unpublish ALL messages in the list
+    private Message mActiveMessage = null;
 
-                //TODO: Perform any other necessary updates based on the new list of peers
+    private MessageListener mMessageListener = null;
 
-                Toast.makeText(getBaseContext(), "Hello", Toast.LENGTH_LONG).show();
+    private MessageFilter   mMessageFilter = null;
 
-            }
-        }
-    };
 
-    private WifiP2pManager.ActionListener actionListener = new WifiP2pManager.ActionListener()
-    {
-        @Override
-        public void onSuccess() {
-            //Called when peer discovery initiation is successful
-        }
-
-        @Override
-        public void onFailure(int reason) {
-            //TODO: Called when discovery initiation fails
-            //TODO: Alert user that something went wrong
-        }
-    };
-
+    //GUI Components
+    Button btnSend;
+    TextView txtMessage;
 
 
     protected void onCreate(Bundle savedInstanceState)
@@ -76,44 +48,26 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        findViewById(R.id.btnDiscoverPeers).setOnClickListener(new View.OnClickListener() {
+        //Connect to Nearby service
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Nearby.MESSAGES_API)
+                .addConnectionCallbacks(this)
+                .enableAutoManage(this, this)
+                .build();
+
+        mGoogleApiClient.connect();
+
+
+        btnSend = (Button) findViewById(R.id.btnSend);
+        txtMessage = (TextView) findViewById(R.id.txtMessage);
+
+        findViewById(R.id.btnSend).setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-
-                //Begins the peer discovery process: action listener is called when peer discovery
-                //is initiated
-
-                mManager.discoverPeers(mChannel, actionListener);
-
+                publish(txtMessage.getText().toString());
             }
         });
-
-        //Create p2p wifi manager
-        mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
-
-        //Register the application with the p2p wifi framework
-        mChannel = mManager.initialize(this, getMainLooper(), null);
-
-        //Create a broadcast receiver - which will notify the activity of events
-        mReceiver = new P2PWifiBroadcastReceiver(mManager, mChannel, this);
-
-
-        //Create intent filter to listen to P2P WiFi events
-        //P2PWifiBroadcastReceiver listens for the same intents
-
-        //  Indicates a change in the Wi-Fi P2P status.
-        intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
-
-        // Indicates a change in the list of available peers.
-        intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
-
-        // Indicates the state of Wi-Fi P2P connectivity has changed.
-        intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
-
-        // Indicates this device's details have changed.
-        intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
-
 
     }
 
@@ -121,31 +75,115 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume()
     {
         super.onResume();
-        registerReceiver(mReceiver, intentFilter);
     }
 
     @Override
     protected void onPause()
     {
         super.onPause();
-        unregisterReceiver(mReceiver);
     }
 
-    public boolean isWifiP2pEnabled()
+
+    private void setupNearbyMessagesAPI()
     {
-        return wifiP2pEnabled;
+        //TODO: "If enableAutoManage cannot be used: eg) want to live outside
+        //activity lifecycle,
+        // see https://developers.google.com/nearby/messages/android/user-consent
+
+        //Create a message listener
+        mMessageListener = new MessageListener() {
+            @Override
+            public void onFound(Message message)
+            {
+                String messageString = new String(message.getContent());
+                Log.d(TAG, "Message recvd: " + messageString);
+            }
+
+            @Override
+            public void onLost(Message message)
+            {
+                String messageAsString = new String(message.getContent());
+                Log.d(TAG, "Lost sight of message: " + messageAsString);
+            }
+        };
+
+        subscribe();
+
     }
 
-    public void setWifiP2pEnabled(boolean wifiP2pEnabled)
+    @Override
+    public void onConnected(@Nullable Bundle bundle)
     {
-        this.wifiP2pEnabled = wifiP2pEnabled;
+        //We are now connected to Nearby and can subscribe etc
+        setupNearbyMessagesAPI();
     }
 
-    public WifiP2pManager.PeerListListener getPeerListListener()
+    @Override
+    public void onConnectionSuspended(int i)
     {
-        return peerListListener;
+        //TODO: Handle the suspension of connection to Nearby service
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult)
+    {
+        //TODO: Handle the failure of connection to Nearby service
+    }
+
+    /**
+     * Send a message
+     * @param message
+     */
+    private void publish(String message)
+    {
+        //TODO: add to messages list
+        Message activeMessage = new Message(message.getBytes());
+        mActiveMessage = activeMessage;
+        Nearby.Messages.publish(mGoogleApiClient, activeMessage);
+
     }
 
 
+    //TODO:
+    private void unpublish()
+    {
+        if (mActiveMessage != null)
+        {
+            Nearby.Messages.unpublish(mGoogleApiClient, mActiveMessage);
+        }
+
+    }
+
+    //TODO:
+    private void unpublishMostRecent()
+    {
+
+    }
+
+    //TODO:
+    private void unpublishAll()
+    {
+
+    }
+
+    private void subscribe()
+    {
+        Log.i(TAG, "Subscribing.");
+        Nearby.Messages.subscribe(mGoogleApiClient, mMessageListener);
+
+
+        //TODO: Use subscribe options: includes useful stuff like messageFilter
+        //TODO: subscribe option SubscribeCallback
+        //TODO: subscribe option ResultCallback..... https://developers.google.com/nearby/messages/android/pub-sub
+        // SubscribeOptions options = new SubscribeOptions(Strategy.DEFAULT)
+
+        // Nearby.Messages.subscribe(mGoogleApiClient, mMessageListener, options);
+    }
+
+    private void unSubscribe()
+    {
+        Log.i(TAG, "Unsubscribing.");
+        Nearby.Messages.unsubscribe(mGoogleApiClient, mMessageListener);
+    }
 
 }
