@@ -21,7 +21,7 @@
             android:name="com.google.android.nearby.messages.API_KEY"
             android:value="AIzaSyBY7NKepHh39AszF92Y6IHZpecUMZb-aes" />
 
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
         <activity android:name=".StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,7 +32,11 @@
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
+        <activity android:name=".SessionListActivity" />
+        <activity android:name=".SessionLoginActivity" />
+        <activity android:name=".RequestHelpActivity" />
+        <activity android:name=".RequestQueueActivity"></activity>
     </application>
 
 </manifest>

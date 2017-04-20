@@ -6,5 +6,7 @@
     <color name="colorActionBar">#303030</color>
     <color name="colorBack">#424242</color>
     <color name="colorButtonGreen">#32671a</color>
+    <color name="colorButtonRed">#b71c1c</color>
     <color name="colorButtonTextBlack">#000000</color>
+    <color name="colorText">#c0bcbd</color>
 </resources>
