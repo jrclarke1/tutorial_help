@@ -13,6 +13,8 @@ buildscript {
 }
 
 allprojects {
+    //Build in a different directory: as paths were too long in default
+    buildDir = "C:/tmp/${rootProject.name}/${project.name}"
     repositories {
         jcenter()
     }
