@@ -2,28 +2,26 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="uk.ac.plymouth.android.tutorialhelp">
 
-    <!--<uses-permission-->
-        <!--android:required="true"-->
-        <!--android:name="android.permission.ACCESS_WIFI_STATE"/>-->
-    <!--<uses-permission-->
-        <!--android:required="true"-->
-        <!--android:name="android.permission.CHANGE_WIFI_STATE"/>-->
-    <!--<uses-permission-->
-        <!--android:required="true"-->
-        <!--android:name="android.permission.INTERNET"/>-->
-
-
-    <application>
+    <!-- <uses-permission -->
+    <!-- android:required="true" -->
+    <!-- android:name="android.permission.ACCESS_WIFI_STATE"/> -->
+    <!-- <uses-permission -->
+    <!-- android:required="true" -->
+    <!-- android:name="android.permission.CHANGE_WIFI_STATE"/> -->
+    <!-- <uses-permission -->
+    <!-- android:required="true" -->
+    <!-- android:name="android.permission.INTERNET"/> -->
+    <application
+        android:theme="@style/AppTheme"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true">
 
         <meta-data
             android:name="com.google.android.nearby.messages.API_KEY"
             android:value="AIzaSyBY7NKepHh39AszF92Y6IHZpecUMZb-aes" />
 
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,6 +29,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".StartActivity"></activity>
     </application>
 
 </manifest>

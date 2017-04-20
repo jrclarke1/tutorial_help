@@ -1,9 +1,10 @@
 package uk.ac.plymouth.android.tutorialhelp;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -19,7 +20,7 @@ import com.google.android.gms.nearby.messages.MessageFilter;
 import com.google.android.gms.nearby.messages.MessageListener;
 
 
-public class MainActivity extends FragmentActivity
+public class MainActivity extends AppCompatActivity
         implements
         ConnectionCallbacks,
         OnConnectionFailedListener
@@ -52,7 +53,6 @@ public class MainActivity extends FragmentActivity
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Nearby.MESSAGES_API)
                 .addConnectionCallbacks(this)
-                .enableAutoManage(this, this)
                 .build();
 
         mGoogleApiClient.connect();
