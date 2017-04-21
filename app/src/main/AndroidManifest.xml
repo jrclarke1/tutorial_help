@@ -36,7 +36,10 @@
         <activity android:name=".SessionListActivity" />
         <activity android:name=".SessionLoginActivity" />
         <activity android:name=".RequestHelpActivity" />
-        <activity android:name=".RequestQueueActivity"></activity>
+        <activity android:name=".RequestQueueActivity" />
+        <activity android:name=".CreateSessionActivity" />
+        <activity android:name=".CurrentRequestActivity" />
+        <activity android:name=".SelectReferActivity"></activity>
     </application>
 
 </manifest>

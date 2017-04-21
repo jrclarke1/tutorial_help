@@ -42,7 +42,7 @@ public class SessionLoginActivity extends AppCompatActivity
         setSupportActionBar(activityToolbar);
 
         textViewSessionName = (TextView) findViewById(R.id.textViewSessionName);
-        imageViewSession = (ImageView) findViewById(R.id.imageViewSessionImage);
+        imageViewSession = (ImageView) findViewById(R.id.imageViewStudentImage);
         editTextPassword = (EditText) findViewById(R.id.edit_text_password);
         buttonJoinStudent = (Button) findViewById(R.id.buttonJoinStudent);
         buttonJoinTeacher = (Button) findViewById(R.id.buttonJoinTeacher);

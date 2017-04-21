@@ -13,7 +13,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -44,7 +43,7 @@ public class RequestHelpActivity extends AppCompatActivity
         setSupportActionBar(activityToolbar);
 
         textViewSessionName = (TextView) findViewById(R.id.textViewSessionName);
-        imageViewSession = (ImageView) findViewById(R.id.imageViewSessionImage);
+        imageViewSession = (ImageView) findViewById(R.id.imageViewStudentImage);
 
         buttonRequestHelp = (Button) findViewById(R.id.buttonRequestHelp);
         buttonRequestHelp.setOnClickListener(buttonRequestHelpClickListener);

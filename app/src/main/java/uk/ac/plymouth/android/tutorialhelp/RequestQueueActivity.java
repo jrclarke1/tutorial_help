@@ -1,9 +1,11 @@
 package uk.ac.plymouth.android.tutorialhelp;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -34,6 +36,7 @@ public class RequestQueueActivity extends AppCompatActivity
 
     private Toolbar activityToolbar;
     private LinearLayout requestListLayout;
+    private Button buttonLeaveSession;
 
     private List<HelpRequest> requestList;
 
@@ -49,7 +52,11 @@ public class RequestQueueActivity extends AppCompatActivity
 
         requestListLayout = (LinearLayout) findViewById(R.id.request_list_layout);
 
+        buttonLeaveSession = (Button) findViewById(R.id.buttonLeaveSession);
+        buttonLeaveSession.setOnClickListener(buttonLeaveSessionListener);
+
         requestList = helpSession.getWaitingHelpRequests();
+        updateSessionList();
     }
 
     @Override
@@ -77,13 +84,51 @@ public class RequestQueueActivity extends AppCompatActivity
                 return true;
 
             case R.id.action_refresh:
-                //TODO: Force refresh of queue
+                requestList = helpSession.getWaitingHelpRequests();
+                updateSessionList();
                 return true;
 
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    private View.OnClickListener buttonLeaveSessionListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View v)
+        {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+            builder.setMessage("Are you sure you want to leave?")
+                    .setPositiveButton("Yes", leaveDialogClickListener)
+                    .setNegativeButton("No", leaveDialogClickListener).show();
+        }
+    };
+
+    DialogInterface.OnClickListener leaveDialogClickListener = new DialogInterface.OnClickListener()
+    {
+        @Override
+        public void onClick(DialogInterface dialog, int which)
+        {
+            switch (which)
+            {
+                case DialogInterface.BUTTON_POSITIVE:
+                    //TODO: Disconnect from session
+
+                    //Start the launch activity; whilst clearing the activity stack
+                    //(Return to same state as when app is launched)
+                    Intent intent = new Intent(getApplicationContext(), StartActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    finish();
+                    break;
+
+                case DialogInterface.BUTTON_NEGATIVE:
+                    //Do nothing
+                    break;
+            }
+        }
+    };
 
     /**
      * Updates the UI list of queues
