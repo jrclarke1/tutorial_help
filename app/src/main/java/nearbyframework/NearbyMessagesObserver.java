@@ -10,7 +10,7 @@ import com.google.android.gms.nearby.messages.Message;
  * To be implemented by all relevant activities
  */
 
-public interface NearbyConnectionObserver
+public interface NearbyMessagesObserver
 {
     public void messageReceived(String message);
 

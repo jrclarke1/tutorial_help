@@ -67,7 +67,7 @@ public class StartActivity extends AppCompatActivity
 
     private void checkForSession()
     {
-        
+
     }
 
     private View.OnClickListener buttonJoinOnClickListener = new View.OnClickListener()

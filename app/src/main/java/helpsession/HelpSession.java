@@ -2,12 +2,8 @@ package helpsession;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.Parcel;
-import android.os.Parcelable;
 
 import java.util.List;
-
-import nearbyframework.NearbyConnection;
 
 /**
  * Created by JohnC on 21/04/2017.
@@ -61,7 +57,7 @@ public class HelpSession
     public List<HelpRequest> getAllHelpRequests()
     {
         //TODO
-        //NearbyConnection.getInstance(context).getRequests();
+        //NearbyMessagesConnection.getInstance(context).getRequests();
         return null;
     }
 
@@ -69,7 +65,7 @@ public class HelpSession
     {
         //TODO
 
-        //NearbyConnection.getInstance(context).getRequests();
+        //NearbyMessagesConnection.getInstance(context).getRequests();
         return null;
     }
 
