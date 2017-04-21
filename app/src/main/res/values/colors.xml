@@ -3,4 +3,12 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorActionBar">#303030</color>
+    <color name="colorBack">#424242</color>
+    <color name="colorButtonGreen">#32671a</color>
+    <color name="colorButtonYellow">#e1a357</color>
+    <color name="colorButtonRed">#b71c1c</color>
+    <color name="colorButtonTextBlack">#000000</color>
+    <color name="colorText">#c0bcbd</color>
+
 </resources>
