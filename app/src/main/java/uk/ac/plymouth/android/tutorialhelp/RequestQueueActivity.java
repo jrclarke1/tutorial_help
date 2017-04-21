@@ -23,16 +23,13 @@ import android.widget.TextView;
 import java.util.List;
 
 import helpsession.HelpRequest;
-import helpsession.IHelpSession;
-import helpsession.ISessionFinder;
-import helpsession.NearbySession;
-import helpsession.NearbySessionFinder;
+import helpsession.HelpSession;
 
 public class RequestQueueActivity extends AppCompatActivity
 {
     private final int IMAGE_DIM = 440;
 
-    private IHelpSession helpSession = new NearbySession();
+    private HelpSession helpSession;
 
     private Toolbar activityToolbar;
     private LinearLayout requestListLayout;
@@ -57,6 +54,8 @@ public class RequestQueueActivity extends AppCompatActivity
 
         requestList = helpSession.getWaitingHelpRequests();
         updateSessionList();
+
+        //TODO: create helpSession
     }
 
     @Override

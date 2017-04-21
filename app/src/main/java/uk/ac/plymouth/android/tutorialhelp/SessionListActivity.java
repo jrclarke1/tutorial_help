@@ -20,16 +20,13 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import helpsession.DiscoverableSession;
-import helpsession.ISessionFinder;
-import helpsession.NearbySessionFinder;
+import helpsession.HelpSession;
 
 public class SessionListActivity extends AppCompatActivity
 {
     private final int IMAGE_DIM = 440;
 
-    private ISessionFinder sessionProvider = new NearbySessionFinder();
-    private List<DiscoverableSession> sessions;
+    private List<HelpSession> sessions;
 
     private LinearLayout sessionListLayout;
     private Toolbar activityToolbar;
@@ -45,7 +42,7 @@ public class SessionListActivity extends AppCompatActivity
 
         sessionListLayout = (LinearLayout) findViewById(R.id.session_list_layout);
 
-        sessions = sessionProvider.getAvailableSessions();
+        //TODO: Get sessions
         updateSessionList();
     }
 
@@ -74,7 +71,7 @@ public class SessionListActivity extends AppCompatActivity
                 return true;
 
             case R.id.action_refresh:
-                sessions = sessionProvider.getAvailableSessions();
+                //Update sessions
                 updateSessionList();
                 return true;
 
@@ -95,7 +92,7 @@ public class SessionListActivity extends AppCompatActivity
             return;
         }
 
-        for (DiscoverableSession session : sessions)
+        for (HelpSession session : sessions)
         {
             View view = getSessionView(session);
 
@@ -106,7 +103,7 @@ public class SessionListActivity extends AppCompatActivity
         }
     }
 
-    private View getSessionView(final DiscoverableSession session)
+    private View getSessionView(final HelpSession session)
     {
         Context context = getApplicationContext();
 

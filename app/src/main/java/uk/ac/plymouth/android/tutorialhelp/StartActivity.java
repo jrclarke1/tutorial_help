@@ -32,13 +32,15 @@ public class StartActivity extends AppCompatActivity
 
         buttonCreate = (Button) findViewById(R.id.button_start);
         buttonCreate.setOnClickListener(buttonCreateOnClickListener);
+
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.settings_menu, menu);
+        inflater.inflate(R.menu.settings_refresh_menu, menu);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null)
@@ -61,6 +63,11 @@ public class StartActivity extends AppCompatActivity
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void checkForSession()
+    {
+        
     }
 
     private View.OnClickListener buttonJoinOnClickListener = new View.OnClickListener()
